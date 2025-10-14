@@ -58,8 +58,7 @@ cosmos_client = CosmosClient.from_connection_string(COSMOSDB_CONNECTION_STRING)
 database = cosmos_client.get_database_client(COSMOSDB_DATABASE_NAME)
 container = database.get_container_client(COSMOSDB_CONTAINER_NAME)
 
-db_path = os.getenv("SQLITE_DB_PATH", "data/cgc.db")
-DATABASE_URL = f"sqlite:///{db_path}"
+DATABASE_URL = f"sqlite:///{db_path}" # TODO: migrate to PostgreSQL
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -281,10 +280,6 @@ async def chat_stream_endpoint(
     request: CompletionRequest, db: Session = Depends(get_db)
 ):
     """Detect user intent to classify the query into one of the predefined categories."""
-
-    # response = detect_intention(request.content, request.product_name, db=db)
-    # if response.get("intent") == "non_cgc_query":
-    #     return make_response(200, "Non-CGC query detected", response)
 
     start_time = time.perf_counter()
 
